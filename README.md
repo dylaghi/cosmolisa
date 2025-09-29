@@ -1,5 +1,6 @@
 # cosmolisa
-Source code for the inference of cosmological parameters with LISA observations
+Source code for the inference of cosmological parameters with LISA observations.
+
 Based on github.com/wdpozzo/cosmolisa
 
 Download this repository, with
