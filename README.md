@@ -6,7 +6,7 @@ Based on github.com/wdpozzo/cosmolisa
 Download this repository, with
 
 ```
-git clone https://github.com/wdpozzo/cosmolisa.git
+git clone git@github.com:dylaghi/cosmolisa.git
 ```
 
 ## How to install the code with Conda
@@ -22,9 +22,9 @@ export LAL_PREFIX=$HOME/.conda/envs/cosmolisa_env
 python setup.py install
 ```
 
-If the installation ends without errors, the code is ready for use. 
+If the installation s completed successfully, the code is ready for use. 
 
-You should be able to visualise the help message by giving the following one-line command:
+You should be able to view the help message by entering the following command via CLI:
 
 ```
 cosmoLISA --help
