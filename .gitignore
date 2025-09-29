@@ -1,0 +1,6 @@
+# OS-specific
+.DS_store
+Thumbs.db
+
+# Python
+__pycache__/
