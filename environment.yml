@@ -1,0 +1,16 @@
+name: cosmolisa_env
+channels:
+- default
+- conda-forge
+dependencies:
+  - python=3.9
+  - matplotlib=3.5.1
+  - corner=2.2.2
+  - numpy=1.22.0
+  - cython=0.29.26
+  - tqdm=4.62.3
+  - scipy=1.7.3
+  - setuptools=60.5.0
+  - psutil=5.9.0
+  - lalsuite=7.2
+  - dill=0.3.5
