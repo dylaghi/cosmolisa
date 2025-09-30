@@ -1,69 +1,65 @@
-import numpy
 import os
-from setuptools import setup
-from distutils.extension import Extension
-from setuptools.command.build_ext import build_ext as _build_ext
+import sys
+import numpy
+from setuptools import setup, Extension
 from Cython.Build import cythonize
 
-if not("LAL_PREFIX" in os.environ):
-    print("No LAL installation found, please install LAL from source"
-          "or source your LAL installation")
-    exit()
-else:
-    lal_prefix = os.environ.get("LAL_PREFIX")
+lal_prefix = os.environ.get("LAL_PREFIX")
+if lal_prefix is None:
+    sys.exit(
+        "No LAL installation found. Please install LAL from source "
+          "or source your LAL installation."
+          )
 
-# See https://stackoverflow.com/a/21621689/1862861
-# for why this is here.
-class build_ext(_build_ext):
-    def finalize_options(self):
-        _build_ext.finalize_options(self)
-        # Prevent numpy from thinking it is still in its setup process:
-        __builtins__.__NUMPY_SETUP__ = False
-        self.include_dirs.append(numpy.get_include())
-        
-lal_includes = lal_prefix+"/include"
-lal_libs = lal_prefix+"/lib"
+lal_includes = os.path.join(lal_prefix, "include")
+lal_libs = os.path.join(lal_prefix, "lib")
 
-ext_modules=[
-    Extension(name="cosmolisa.cosmology",
-              sources=["cosmolisa/cosmology.pyx"],
-              libraries=['m', "lal"],  # Unix-like specific
-              library_dirs=[lal_libs],
-              extra_compile_args=['-O3', '-ffast-math'],
-              include_dirs=[numpy.get_include(), lal_includes, "cosmolisa"]),
-    Extension(name="cosmolisa.likelihood",
-              sources=["cosmolisa/likelihood.pyx"],
-              libraries=['m', "lal"],  # Unix-like specific
-              library_dirs=[lal_libs],
-              extra_compile_args=['-O3', '-ffast-math'],
-              include_dirs=[numpy.get_include(), lal_includes, "cosmolisa"]),
-    ]
+common_includes = [numpy.get_include(), lal_includes, "cosmolisa"]
+common_libs = ["m", "lal"]
+common_libdirs = [lal_libs]
+common_compile_args = ['-O3', '-ffast-math']
 
-setup(name="cosmolisa",
-      ext_modules=cythonize(ext_modules, language_level='3'),
-      entry_points={'console_scripts': 
-                    ["cosmoLISA = cosmolisa.cosmological_model:main"]},
-      include_dirs=[numpy.get_include(), lal_includes, "cosmolisa/cosmolisa"],
-      description="cosmolisa: a pipeline for cosmological inference.",
-      author="Danny Laghi, Walter Del Pozzo",
-      author_email="danny.laghi@ligo.org, walter.delpozzo@ligo.org",
-      url="https://github.com/dylaghi/cosmolisa",
-      license="MIT",
-      cmdclass={'build_ext': build_ext},
-      classifiers=[
-          'Development Status :: 4 - Beta',
-          'License :: OSI Approved :: MIT License',
+ext_modules = [
+    Extension(
+        name="cosmolisa.cosmology",
+        sources=["cosmolisa/cosmology.pyx"],
+        libraries=common_libs,
+        library_dirs=common_libdirs,
+        include_dirs=common_includes,
+        extra_compile_args=common_compile_args,
+    ),
+    Extension(
+        name="cosmolisa.likelihood",
+        sources=["cosmolisa/likelihood.pyx"],
+        libraries=common_libs,
+        library_dirs=common_libdirs,
+        include_dirs=common_includes,
+        extra_compile_args=common_compile_args,
+    )
+]
+
+setup(
+    name="cosmolisa",
+    description="cosmolisa: a pipeline for cosmological inference.",
+    author="Danny Laghi, Walter Del Pozzo",
+    author_email="danny.laghi@ligo.org, walter.delpozzo@ligo.org",
+    url="https://github.com/dylaghi/cosmolisa",
+    license="MIT",
+    packages=['cosmolisa'],
+    install_requires=['numpy', 'scipy', 'corner', 'cython'],
+    ext_modules=cythonize(ext_modules, language_level="3"),
+    entry_points={
+        'console_scripts': [
+            "cosmoLISA = cosmolisa.cosmological_model:main"
+            ]
+        },
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'License :: OSI Approved :: MIT License',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.2',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: 3.5',
-          'Programming Language :: Python :: 3.6',
-          'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
-          'Programming Language :: Python :: 3.9',],
-      keywords="gravitational waves cosmology bayesian inference",
-      packages=['cosmolisa'],
-      install_requires=['numpy', 'scipy', 'corner', 'cython'],
-      package_data={"": ['*.pyx', '*.pxd']},
-      )
+          'Programming Language :: Python :: 3.9',
+        ],
+    keywords="gravitational waves cosmology bayesian inference",
+    package_data={"": ['*.pyx', '*.pxd']},
+    )
