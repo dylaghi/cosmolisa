@@ -2,9 +2,7 @@ import numpy as np
 import corner
 import os
 import sys
-import matplotlib
 import matplotlib.pyplot as plt
-from scipy.stats import norm
 
 from cosmolisa import cosmology as cs
 from cosmolisa import likelihood as lk
