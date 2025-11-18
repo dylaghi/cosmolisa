@@ -156,10 +156,9 @@ class CosmologicalModel(Model):
             for e in self.data:
                 z_grid, mixture = self.gal_interp[str(e.ID)]
                 likelihood = lk.lk_dark_single_event_trap(
-                    self.hosts[e.ID], 
                     e.dl_scat if self.dl_gw_true == 0 else e.dl, 
                     e.sigmadl, 
-                    self.O, self.model_str, 
+                    self.O,
                     e.zmin, e.zmax, 
                     z_grid, mixture,
                     self.com_vol_mode) 
